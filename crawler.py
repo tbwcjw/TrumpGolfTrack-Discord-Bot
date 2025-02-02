@@ -8,6 +8,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from PIL import Image
 import config
+from lang import i8ln
 
 
 class TrumpGolfTrack:
@@ -67,9 +68,9 @@ class TrumpGolfTrack:
 
     def to_dict(self):
         return {
-            '🕓 Days in Office': self.days_in_office,
-            '👎 President Since': self.since,
-            '🏌️‍♂️ Days Spent Golfing': self.days_spent_golfing,
-            '📈 Percentage of Presidency spent Golfing': f"{self.time_spent_golfing}%",
-            '📆 Days Golfed on': ", ".join(f"{day}" for day in self.days)
+            f'🕓 {i8ln('days_in_office')}': self.days_in_office,
+            f'👎 {i8ln('president_since')}': self.since,
+            f'🏌️‍♂️ {i8ln('days_spent_golfing')}': self.days_spent_golfing,
+            f'📈 {i8ln('perc_spent_golfing')}': f"{self.time_spent_golfing}%",
+            f'📆 {i8ln('days_golfed_on')}': ", ".join(f"{day}" for day in self.days)
         }

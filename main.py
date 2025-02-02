@@ -8,6 +8,8 @@ import time
 import datetime
 from datetime import datetime
 
+from lang import i8ln
+
 @staticmethod
 def log_action(action: str, user: discord.Member):
     print(f"[{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}] {user} executed: {action}")
@@ -39,7 +41,7 @@ class TrumpGolfTrack(commands.Bot):
             await self.tree.sync()
             print(f"Logged in as {self.user.name}")
         
-        @self.tree.command(name="track", description="Get statistics about Trumps Golfing activities")
+        @self.tree.command(name="track", description=f"{i8ln('track_description')}")
         async def track(interaction: discord.Interaction):
             log_action("/track", interaction.user)
             await self.show_track(interaction)
@@ -49,18 +51,18 @@ class TrumpGolfTrack(commands.Bot):
         await interaction.response.defer()
 
         trump_golf_track = await crawler.TrumpGolfTrack.fetch()
-        embed = discord.Embed(title=f"🏌️ Donald Trump Golf Tracker", color=config.EMBED_COLOR)
+        embed = discord.Embed(title=f"🏌️ {i8ln('track_title')}", color=config.EMBED_COLOR)
         for key, value in trump_golf_track.to_dict().items():
             #put value on new line if length of value is more than the split threshold
             inline = False if len(str(value)) > config.LINE_LENGTH_SPLIT else True
             embed.add_field(name=f"{key}", value=f"```{value}```", inline=inline)
 
-        embed.add_field(name="⌛ Days until next Presidency", value=f"```{countdown()} days```")
+        embed.add_field(name=f"⌛ {i8ln('days_until')}", value=f"```{countdown()} {i8ln('days')}```")
         file = discord.File(config.GRAPHS_SAVE_PATH, filename=config.GRAPHS_FILE_NAME)
         embed.set_image(url=f"attachment://{config.GRAPHS_SAVE_PATH}")
-        embed.set_footer(text=f"Data provided by {config.URL_PATH}, a nonaffiliate.")
+        embed.set_footer(text=f"{i8ln('provided_by')} {config.URL_PATH}, {i8ln('non_affiliate')}")
 
-        await interaction.followup.send(embed=embed, file=file, ephemeral=True)
+        await interaction.followup.send(embed=embed, file=file, ephemeral=config.EPHEMERAL_RESPONSE)
 
 intents = discord.Intents.default()
 intents.message_content = True
