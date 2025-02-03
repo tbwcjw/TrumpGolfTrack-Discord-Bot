@@ -1,0 +1,6 @@
+[submodule "docker/docker/bot"]
+	path = docker/docker/bot
+	url = https://github.com/tbwcjw/TrumpGolfTrack-Discord-Bot
+[submodule "docker/bot"]
+	path = docker/bot
+	url = https://github.com/tbwcjw/TrumpGolfTrack-Discord-Bot
