@@ -1,9 +1,13 @@
-from datetime import datetime
+from datetime import datetime, timedelta
 import discord
 
 TOKEN=""
 
 LANG="en" #en, fr, es
+
+CACHE_ENABLE = True
+CACHE_TIME = timedelta(days=1)
+CACHE_FILE = 'data.json'
 
 LINE_LENGTH_SPLIT = 12
 

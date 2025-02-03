@@ -1,3 +1,5 @@
+import json
+import os
 import crawler
 import config
 
@@ -30,6 +32,15 @@ def countdown():
     current_date = datetime.now()
     return (config.NEXT_INAUGURATION_DATE - current_date).days
 
+class Cached:
+    def __init__(self, data):
+        self.data = data
+
+    def to_dict(self):
+        if isinstance(self.data, dict):
+            return self.data
+        return {key: str(value) for key, value in self.data.items()}
+    
 class TrumpGolfTrack(commands.Bot):
     def __init__(self, command_prefix, intents):
         super().__init__(command_prefix=command_prefix, intents=intents, timeout=None)
@@ -50,7 +61,20 @@ class TrumpGolfTrack(commands.Bot):
     async def show_track(self, interaction:discord.Interaction):
         await interaction.response.defer()
 
-        trump_golf_track = await crawler.TrumpGolfTrack.fetch()
+        file_modified_time = os.path.getmtime(config.CACHE_FILE)
+        current_time = time.time()
+        
+        if current_time - file_modified_time > config.CACHE_TIME.total_seconds():
+            print(f"[{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}] writing new cache")
+            trump_golf_track = await crawler.TrumpGolfTrack.fetch()
+            serialized = {key: str(value) for key, value in trump_golf_track.to_dict().items()}
+            with open(config.CACHE_FILE, 'w') as f:
+                json.dump(serialized, f)
+        else:
+            print(f"[{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}] reading from cache")
+            with open(config.CACHE_FILE, 'r') as f:
+                trump_golf_track = Cached(json.load(f))
+
         embed = discord.Embed(title=f"🏌️ {i8ln('track_title')}", color=config.EMBED_COLOR)
         for key, value in trump_golf_track.to_dict().items():
             #put value on new line if length of value is more than the split threshold
