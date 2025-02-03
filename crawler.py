@@ -45,10 +45,10 @@ class TrumpGolfTrack:
             location = graphs.location
             size = graphs.size
             image = Image.open(BytesIO(screenshot))
-            left = location['x']                    # annoying evil shit
-            top = location['y'] + 64                # offset 64
-            right = left + size['width'] + 256      # offset 256
-            bottom = top + size['height'] + 50      # offset 50
+            left = location['x']                    # you may have to add offsets to these
+            top = location['y']                     # offset 64
+            right = left + size['width']            # offset 256
+            bottom = top + size['height']           # offset 50
             cropped_image = image.crop((left, top, right, bottom))
             cropped_image.save(config.GRAPHS_SAVE_PATH)
 
