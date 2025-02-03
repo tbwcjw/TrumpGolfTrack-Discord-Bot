@@ -72,5 +72,5 @@ class TrumpGolfTrack:
             f"👎 {i8ln('president_since')}": self.since,
             f"🏌️‍♂️ {i8ln('days_spent_golfing')}": self.days_spent_golfing,
             f"📈 {i8ln('perc_spent_golfing')}": f"{self.time_spent_golfing}%",
-            f"📆 {i8ln("days_golfed_on")}": ", ".join(f"{day}" for day in self.days)
+            f"📆 {i8ln('days_golfed_on')}": ", ".join(f"{day}" for day in self.days)
         }
