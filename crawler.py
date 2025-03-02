@@ -30,14 +30,15 @@ class TrumpGolfTrack:
         try:
             driver.get(config.URL_PATH)
 
-            days_in_office = int(driver.find_element(By.CSS_SELECTOR, "main .grid div:nth-child(1) > p:nth-child(2)").text)
-            days_spent_golfing = int(driver.find_element(By.CSS_SELECTOR, "main .grid div:nth-child(2) > p:nth-child(2)").text)
-            time_spent_golfing = float(driver.find_element(By.CSS_SELECTOR, "main .grid div:nth-child(3) > p:nth-child(2)").text.strip('%'))
+            #updated 3/2/2025.
+            days_in_office = int(driver.find_element(By.XPATH, "/html/body/div/div/main/div[2]/div[1]/div/div[1]/p[1]").text)
+            days_spent_golfing = int(driver.find_element(By.XPATH, "/html/body/div/div/main/div[2]/div[1]/div/div[2]/p[1]").text) #was main .grid div:nth-child(2) > p:nth-child(2)
+            time_spent_golfing = float(driver.find_element(By.XPATH, "/html/body/div/div/main/div[2]/div[1]/div/div[3]/p[1]").text.strip('%')) # was main .grid div:nth-child(3) > p:nth-child(2)
             
             #wait until graphs animate fully
             wait = WebDriverWait(driver, 10)
-            #double check this the next time the site updates, is nth-child(7) always the last graph marker?
-            wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, "main div.flex:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > svg:nth-child(1) > g:nth-child(4) > g:nth-child(3) > circle:nth-child(7)"))) 
+            #double check this the next time the site updates, is nth-child(7) always the last graph marker? looks like no, but doesn't make a difference
+            wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, "div.gap-1:nth-child(1) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > svg:nth-child(1) > g:nth-child(4) > g:nth-child(3) > circle:nth-child(10)"))) 
             
             #take screenshot of graphs
             graphs = driver.find_element(By.CSS_SELECTOR, "main .grid-cols-2")

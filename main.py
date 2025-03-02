@@ -64,16 +64,20 @@ class TrumpGolfTrack(commands.Bot):
         file_modified_time = os.path.getmtime(config.CACHE_FILE)
         current_time = time.time()
         
-        if current_time - file_modified_time > config.CACHE_TIME.total_seconds():
-            print(f"[{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}] writing new cache")
-            trump_golf_track = await crawler.TrumpGolfTrack.fetch()
-            serialized = {key: str(value) for key, value in trump_golf_track.to_dict().items()}
-            with open(config.CACHE_FILE, 'w') as f:
-                json.dump(serialized, f)
+        if config.CACHE_ENABLE:
+            if current_time - file_modified_time > config.CACHE_TIME.total_seconds():
+                print(f"[{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}] writing new cache")
+                trump_golf_track = await crawler.TrumpGolfTrack.fetch()
+                serialized = {key: str(value) for key, value in trump_golf_track.to_dict().items()}
+                with open(config.CACHE_FILE, 'w') as f:
+                    json.dump(serialized, f)
+            else:
+                print(f"[{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}] reading from cache")
+                with open(config.CACHE_FILE, 'r') as f:
+                    trump_golf_track = Cached(json.load(f))
         else:
-            print(f"[{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}] reading from cache")
-            with open(config.CACHE_FILE, 'r') as f:
-                trump_golf_track = Cached(json.load(f))
+            print(f"cache disabled, grabbing new")
+            trump_golf_track = await crawler.TrumpGolfTrack.fetch()
 
         embed = discord.Embed(title=f"🏌️ {i8ln('track_title')}", color=config.EMBED_COLOR)
         for key, value in trump_golf_track.to_dict().items():
