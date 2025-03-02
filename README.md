@@ -5,7 +5,7 @@
 </p>
 <p align="center">
 <img width="50%" src="https://github.com/tbwcjw/TrumpGolfTrack-Discord-Bot/blob/main/example.png?raw=true">
-<h4>Setup</h4>
+<h5>Setup</h5>
 <ul>
     <li>Add the token from <code>Settings > Bot > Token</code> to the <code>TOKEN=</code> line of config.py.</li>
     <li>Set the <code>CHROME_DRIVER_PATH</code> line of config.py to the full path of <code>chromedriver.exe</code>.
@@ -25,7 +25,7 @@
 </ul>
 <h4>TODO</h4>
 <ul>
-    <li>Set up and publish a docker container, for easy install.</li>
+    <li><strike>Set up and publish a docker container, for easy install.</strike></li>
 </ul>
 <h4>Supported Languages</h4>
 
