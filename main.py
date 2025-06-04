@@ -1,6 +1,5 @@
 import json
 import os
-import crawler
 import config
 
 import discord
@@ -10,6 +9,7 @@ import time
 import datetime
 from datetime import datetime
 
+import crawler
 from lang import i8ln
 
 @staticmethod
@@ -61,23 +61,7 @@ class TrumpGolfTrack(commands.Bot):
     async def show_track(self, interaction:discord.Interaction):
         await interaction.response.defer()
 
-        file_modified_time = os.path.getmtime(config.CACHE_FILE)
-        current_time = time.time()
-        
-        if config.CACHE_ENABLE:
-            if current_time - file_modified_time > config.CACHE_TIME.total_seconds():
-                print(f"[{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}] writing new cache")
-                trump_golf_track = await crawler.TrumpGolfTrack.fetch()
-                serialized = {key: str(value) for key, value in trump_golf_track.to_dict().items()}
-                with open(config.CACHE_FILE, 'w') as f:
-                    json.dump(serialized, f)
-            else:
-                print(f"[{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}] reading from cache")
-                with open(config.CACHE_FILE, 'r') as f:
-                    trump_golf_track = Cached(json.load(f))
-        else:
-            print(f"cache disabled, grabbing new")
-            trump_golf_track = await crawler.TrumpGolfTrack.fetch()
+        trump_golf_track = await crawler.TrumpGolfTrack.fetch()
 
         embed = discord.Embed(title=f"🏌️ {i8ln('track_title')}", color=config.EMBED_COLOR)
         for key, value in trump_golf_track.to_dict().items():
@@ -86,11 +70,12 @@ class TrumpGolfTrack(commands.Bot):
             embed.add_field(name=f"{key}", value=f"```{value}```", inline=inline)
 
         embed.add_field(name=f"⌛ {i8ln('days_until')}", value=f"```{countdown()} {i8ln('days')}```")
-        file = discord.File(config.GRAPHS_SAVE_PATH, filename=config.GRAPHS_FILE_NAME)
-        embed.set_image(url=f"attachment://{config.GRAPHS_SAVE_PATH}")
+        # no more graphs, bye bye graphs
+        # file = discord.File(config.GRAPHS_SAVE_PATH, filename=config.GRAPHS_FILE_NAME)
+        # embed.set_image(url=f"attachment://{config.GRAPHS_SAVE_PATH}")
         embed.set_footer(text=f"{i8ln('provided_by')} {config.URL_PATH}, {i8ln('non_affiliate')}")
 
-        await interaction.followup.send(embed=embed, file=file, ephemeral=config.EPHEMERAL_RESPONSE)
+        await interaction.followup.send(embed=embed,  ephemeral=config.EPHEMERAL_RESPONSE)
 
 intents = discord.Intents.default()
 intents.message_content = True
